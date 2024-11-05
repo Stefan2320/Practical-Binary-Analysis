@@ -37,8 +37,15 @@ Stripped:
 Write another program, this time so that it tricks your favorite recursive disassembler’s function detection algorithm. There are various ways to do this. For
 instance, you could create a tail-called function or a function that has a switch with multiple return cases. See how far you can go with confusing the disassembler!
 
-* A recursive dissasembler goes with the control flow of the binary, basically follows the call, jumps and return to recusively travers the CFG of a program.
-* Some recursive dissasemblers are: IDA Pro, Ghidra, Binary Ninja, Radare2.
-* To confuse a recursive dissasembler we can  
+* A recursive disassembler goes with the control flow of the binary, basically follows the calls, jumps and returns to recusively traverse the CFG of a program.
+* Some recursive disassemblers are: IDA Pro, Ghidra, Binary Ninja, Radare2.
+* To confuse a recursive disassembler we can use the tail-call optimization for a recursive function. 
 
+If we don't use any optimization on it, Ghidra will be able to create the call graph correctly.
+If we use the [optimization '02'](https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html#index-O2) Ghidra will make the tail `call`s -> `jmp`s and will make mistakes in the call graph.
+The difference in my case is that when it's not optimized you can see in the call graph that the function is recursive while if we use the optimization we can't see that anymore in the call graph.
 
+The option within '02' that is related to this exercise is `-foptimize-sibling-calls` which:
+```
+This option determines whether the compiler optimizes tail recursive calls. It enables conversion of tail recursion into loops.
+```
