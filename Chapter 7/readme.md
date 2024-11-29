@@ -1,6 +1,6 @@
 
 
-1. Make a copy of the date binary and modify the appearance of it. 
+### Make a copy of the date binary and modify the appearance of it. 
 
 `date` - a simple command that is used to display the current date, nothing fancy.
 
