@@ -39,3 +39,42 @@ To modify the format I just searched for the default format and changed some byt
 
 
 
+### Limit the scope of ls
+
+By using the `LD_PRELOAD` technique make a version of ls that only allows you to use ls in the home dir.
+`LD_PPRELOAD` is an environment variable that influences the behaviour of the dynamic linker. With this env you can specify what libraries to load before any other libraries (e.g. libc.so). If you overwrite a library/function first it will use the one in LD\_PRELOAD, this makes it easy to add code but you can only use it to modify library calls.
+
+
+To do this exercise we first need to see what function from `ls` we want to override. To just list what library functions ls uses we can use `ltrace ./ls` which results in: 
+```
+...
+__errno_location()                                                                                                   
+opendir(".") <---- Target function we want to override
+readdir(0x5765d363ccb0)
+....
+```
+
+Opendir seems like the perfect candidate for the current task. Lets see where it is implemented. After a quick search we find that it is in `dirent/opendir.c`.
+
+I created my own version of opendir.c that basically calls the original opendir function only if you're in the home directory, otherwise it will give an error message.
+
+To compile:
+`gcc opendir.c -o opendir.so -shared -fPIC -ldl`
+
+To use the library (this is per terminal instance so it will not affect you long term)
+`export LD_PRELOAD="$(pwd)/opendir.so"`
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
